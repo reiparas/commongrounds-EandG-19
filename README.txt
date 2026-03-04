@@ -1,6 +1,6 @@
 ##### CSCI 40 Midterms #####
 
-- Section E
+- Section E & G
 - Group Number 19
 
 
