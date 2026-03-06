@@ -21,4 +21,5 @@ urlpatterns = [
     path('diyprojects/', include('diyprojects.urls', namespace="diyprojects")),
     path('admin/', admin.site.urls),
     path('commissions/', include('commissions.urls'))
+    path('bookclub/', include("bookclub.urls")),
 ]
