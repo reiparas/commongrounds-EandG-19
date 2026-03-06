@@ -1,0 +1,12 @@
+<h1>Product List</h1>
+
+<ul>
+
+{% for product in products %}
+    <li>
+        <a href="{% url 'merchstore:product-detail' product.pk %}">
+            {{ product.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul> 

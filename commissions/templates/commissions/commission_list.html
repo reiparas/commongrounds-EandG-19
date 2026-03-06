@@ -1,0 +1,11 @@
+<h1>Commission Requests</h1>
+
+<ul>
+    {% for commission in commissions %}
+        <li>
+            <a href="/commissions/request/{{ commission.id }}">
+                {{ commission.title }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<title>DIY Projects</title>
+</head>
+<body>
+	<header>
+		<h1>DIY Projects</h1>
+		<h2>Projects List</h2>
+	</header>
+	<ul>
+	  {% for project in projects %}
+	    <li> <a href="{{ project.get_absolute_url }}">{{ project.title }}</a></li>
+	  {% endfor %}
+	</ul>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ event.title }} – Local Events{% endblock %}
+
+{% block content %}
+<h1>{{ event.title }}</h1>
+<p><strong>Category:</strong> {{ event.category|default:"N/A" }}</p>
+<p><strong>Location:</strong> {{ event.location }}</p>
+<p><strong>Start:</strong> {{ event.start_time }}</p>
+<p><strong>End:</strong> {{ event.end_time }}</p>
+<p><strong>Description:</strong> {{ event.description }}</p>
+<p><strong>Created On:</strong> {{ event.created_on }}</p>
+<p><strong>Updated On:</strong> {{ event.updated_on }}</p>
+<a href="/localevents/events" class="back-link">← Back to Events</a>
+{% endblock %}
