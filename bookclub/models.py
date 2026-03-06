@@ -1,12 +1,13 @@
 from django.db import models
 from django.urls import reverse
 
+
 class Genre(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
 
     class Meta:
-        ordering = [ "name" ]
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -32,4 +33,3 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-    
