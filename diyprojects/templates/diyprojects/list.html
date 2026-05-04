@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-	<title>DIY Projects</title>
-</head>
-<body>
-	<header>
-		<h1>DIY Projects</h1>
-		<h2>Projects List</h2>
-	</header>
-	<ul>
-	  {% for project in projects %}
-	    <li> <a href="{{ project.get_absolute_url }}">{{ project.title }}</a></li>
-	  {% endfor %}
-	</ul>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}DIY Projects{% endblock %}
+
+{% block content %}
+<h1>DIY Projects</h1>
+{% for project in projects %}
+<div class="card">
+    <h3><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h3>
+    <p><strong>Category:</strong> {{ project.category|default:"N/A" }}</p>
+</div>
+{% empty %}
+<p>No events available.</p>
+{% endfor %}
+{% endblock %}

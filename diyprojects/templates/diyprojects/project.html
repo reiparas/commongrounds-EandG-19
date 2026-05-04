@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en-US">
-<head>
-	<title>{{ project.title }}</title>
-</head>
-<body>
-	<header>
-		<h1>DIY Projects</h1>
-		<h2>{{ project.title }}</h2>
-		<h3>Category: {{ project.category.name }}</h3>
-		<h3>{{ project.description }}</h3>
-	</header>
+{% extends 'base.html' %}
 
-	<ul>
-		<li>Materials: {{project.materials}}</li>
-		<li>Steps: {{project.steps}}</li>
-	</ul>
-	<a href="{% url 'diyprojects:project_list' %}">Projects</a>
-</body>
-</html>
+{% block title %}{{ project.title }} – DIY Projects{% endblock %}
+
+{% block content %}
+<h1>{{ project.title }}</h1>
+<p><strong>Category:</strong> {{ project.category|default:"N/A" }}</p>
+<p><strong>Description:</strong> {{ event.description }}</p>
+<p><strong>Created On:</strong> {{ project.created_On }}</p>
+<p><strong>Updated On:</strong> {{ project.updated_On }}</p>
+<p><strong>Materials:</strong> {{ project.materials }}</p>
+<p><strong>Steps:</strong> {{ project.steps }}</p>
+<a href="{% url 'diyprojects:project_list' %}">← Back to Projects</a>
+{% endblock %}
