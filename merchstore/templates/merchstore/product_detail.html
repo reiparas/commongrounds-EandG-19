@@ -1,5 +1,66 @@
+{% block content %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Common Grounds{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+        nav { background: #333; padding: 10px; margin-bottom: 20px; border-radius: 5px; }
+        nav a { color: white; text-decoration: none; margin-right: 15px; }
+        nav a:hover { text-decoration: underline; }
+        h1 { color: #333; }
+        a { color: #0066cc; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .back-link { margin-top: 20px; display: block; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/merchstore/items">Merch Store</a>
+        <a href="/localevents/events">Local Events</a>
+        <a href="/bookclub/books">Book Club</a>
+        <a href="/diyprojects/projects">DIY Projects</a>
+        <a href="/commissions/requests">Commissions</a>
+    </nav>
+
 <h1>{{ product.name }}</h1>
 
+
+<img src="{{ product.image.url }}" alt="" style="width: 300px;">
+
+
 <ul> Product Type: {{ product.productType.name }} </ul>
+<ul> Owner: {{ product.owner.displayName }} </ul>
 <ul> Description: {{ product.description }} </ul>
 <ul> Price: {{ product.price }} </ul>
+<ul> Stock: {{ product.stock }} </ul>
+<ul> Status: {{ product.status }} </ul>
+
+<ul> {% if user.is_authenticated %}
+		<form method="POST" action="{{ product.get_absolute_url }}">
+		    {% csrf_token %}
+			{{ form.as_p }}
+		    <button type="submit"{% if product.owner == user.profile or product.stock == 0 %}
+            disabled
+            {% endif %}>Buy</button>
+		</form>
+	{% else %}
+		<form method="POST" action="{% url 'login' %}">
+			{% csrf_token %}
+			{{ form.as_p }}
+            >Buy</button>
+		</form>
+	{% endif %}</ul>
+
+{% if user.is_authenticated and user.profile.role == "Market Seller" %}
+    <a href="{% url 'merchstore:update' pk=product.pk %}" class="btn">Update Product</a>
+{% endif %}
+
+{% endblock %}
+			<!-- <button type="submit"
+            {% if product.owner == user.profile or product.stock == 0 %} 
+                disabled 
+                style="background-color: gray; cursor: Unclickable;"
+            {% endif %}> -->

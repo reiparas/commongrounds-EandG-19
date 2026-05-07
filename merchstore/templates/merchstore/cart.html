@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<h1>Product List</h1>
+
+<ul>
+
+    {% for transaction in cart %}
+    <li>
+        <a href="{% url 'merchstore:product-detail' transaction.pk %}">
+            {{ transaction.product.name }}
+        </a> 
+        <p> Status: {{ transaction.status }} <p> 
+        <p> Amount: {{transaction.amount}}, 
+            bought on {{transaction.createdon}}
+        <p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

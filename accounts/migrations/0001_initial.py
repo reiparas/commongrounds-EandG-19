@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('displayName', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=254, unique=True)),
-                ('role', models.CharField(choices=[('None', 'None'), ('Market Seller', 'Marketseller'), ('Event Organizer', 'Eventorganizer'), ('Book Contributor', 'Bookcontributor'), ('Project Creator', 'Projectcreator'), ('Commission Maker', 'Commissionmaker')], default='None', max_length=50)),
+                ('role', models.CharField(choices=[('None', 'None'), ('Market Seller', 'Marketseller'), ('Event Organizer', 'Eventorganizer'), ('Book Contributor', 'Bookcontributor'), ('Project Creator', 'Projectcreator'), ('Commission Maker', 'Commissionmaker')], default='None', max_width=50)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],
         ),
