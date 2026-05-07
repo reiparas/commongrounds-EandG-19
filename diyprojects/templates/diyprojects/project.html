@@ -4,11 +4,84 @@
 
 {% block content %}
 <h1>{{ project.title }}</h1>
+<h3><strong>Created by </strong>{{project.creator.displayName}}</h3>
 <p><strong>Category:</strong> {{ project.category|default:"N/A" }}</p>
-<p><strong>Description:</strong> {{ event.description }}</p>
+<p><strong>Description:</strong> {{ project.description }}</p>
 <p><strong>Created On:</strong> {{ project.created_On }}</p>
 <p><strong>Updated On:</strong> {{ project.updated_On }}</p>
 <p><strong>Materials:</strong> {{ project.materials }}</p>
 <p><strong>Steps:</strong> {{ project.steps }}</p>
+{% if user.is_authenticated %}
+	<p><strong>Rating ({{ ratings.count }}): </strong> {{ avgRating }}</p>
+	{% if project in ratProjects %}
+		<form method ="POST">
+			{% csrf_token %}
+			{{ rateForm }}
+			<input type="submit" value="Update rating" name="changeRate">
+		</form>
+		<form method ="POST">
+			{% csrf_token %}
+			<input type="submit" value="Remove rating" name="removeRate">
+		</form>
+	{% else %}
+		<form method ="POST">
+			{% csrf_token %}
+			{{ rateForm }}
+			<input type="submit" value="Rate" name="addRate">
+		</form>
+	{% endif %}
+	<p><strong>Favorites: </strong> {{ favorites.count }}</p>
+	{% if project in favProjects %}
+		<form method ="POST">
+			{% csrf_token %}
+			{{ favForm }}
+			<input type="submit" value="Update status" name="changeStat">
+		</form>
+		<form method ="POST">
+			{% csrf_token %}
+			<input type="submit" value="Remove from favorites" name="removeFave">
+		</form>
+	{% else %}
+		<p>Add to favorite?</p>
+		<form method ="POST">
+			{% csrf_token %}
+			{{ favForm }}
+			<input type="submit" value="Add to favorites" name="addFav">
+		</form>
+	{% endif %}
+	{% if project in revProjects %}
+		<p>Edit review:</p>
+		<form method ="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ revForm }}
+			<input type="submit" value="Update review" name="changeRev">
+		</form>
+		<form method ="POST">
+			{% csrf_token %}
+			<input type="submit" value="Remove review" name="removeRev">
+		</form>
+	{% else %}
+		<p>Leave a review:</p>
+		<form method ="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ revForm }}
+			<input type="submit" value="Submit review" name="addRev">
+		</form>
+	{% endif %}
+{% else %}
+	<p><strong>Rating ({{ ratings.count }}): </strong> {{ avgRating }}</p>
+	<p><strong>Favorites: </strong> {{ favorites.count }}</p>
+{% endif %}
+<h2>Reviews</h2>
+{% for review in reviews %}
+	<div class="card">
+		<h4><strong>From </strong> {{ review.reviewer|default:"N/A" }}</h4>
+		<p>{{ review.comment|default:"N/A" }}</p>
+		{% if review.review_Image %}
+			<img src="{{ review.review_Image.url }}" alt="Image of Project">
+		{% endif %}
+	</div>
+{% endfor %}
+<br>
 <a href="{% url 'diyprojects:project_list' %}">← Back to Projects</a>
 {% endblock %}

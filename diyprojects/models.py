@@ -44,7 +44,7 @@ class Project(models.Model):
         app_label = 'diyprojects'
 
 class Favorite(models.Model):
-    project = models.OneToOneField(
+    project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
         related_name='profile'
@@ -74,22 +74,23 @@ class ProjectReview(models.Model):
         related_name='rev_projects'
     )
     project = models.ForeignKey(
-        'accounts.Profile',
+        Project,
         on_delete=models.CASCADE,
         related_name='reviewer'
     )
     comment = models.TextField(blank=True)
+    review_Image = models.ImageField(upload_to='images/diyprojects/', null=True)
 
 class ProjectRating(models.Model):
-    profile = models.ForeignKey(
+    rater = models.ForeignKey(
         'accounts.Profile',
         on_delete=models.CASCADE,
         related_name='rate_projects'
     )
     project = models.ForeignKey(
-        'accounts.Profile',
+        Project,
         on_delete=models.CASCADE,
-        related_name='profile'
+        related_name='rater'
     )
     score = models.IntegerField(
         validators=[
