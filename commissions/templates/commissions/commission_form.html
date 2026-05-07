@@ -1,0 +1,37 @@
+{% block content %}
+
+<h1>
+    {% if object %}
+        Edit Commission
+    {% else %}
+        Create Commission
+    {% endif %}
+</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <h2>Commission Details</h2>
+    {{ form.as_p }}
+
+    <h2>Jobs</h2>
+    {{ job_formset.management_form }}
+    {% for job_form in job_formset %}
+        <div>
+            <h3>Job {{ forloop.counter }}</h3>
+            {{ job_form.as_p }}
+        </div>
+    {% endfor %}
+
+    <button type="submit">
+        {% if object %}
+            Save Changes
+        {% else %}
+            Create Commission
+        {% endif %}
+    </button>
+</form>
+
+<a href="{% url 'commissions:commission_list' %}">Cancel</a>
+
+{% endblock %}
