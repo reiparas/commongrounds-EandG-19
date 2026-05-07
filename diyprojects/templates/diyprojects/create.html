@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}New Project – DIY Projects{% endblock %}
+
+{% block content %}
+    <h1>Create a new project</h1>
+    <form method ="POST">
+        {% csrf_token %}
+        {{ projForm }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

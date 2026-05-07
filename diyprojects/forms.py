@@ -1,6 +1,11 @@
 from django import forms
 from .models import Project, Favorite, ProjectReview, ProjectRating
 
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('title', 'category', 'description', 'materials', 'steps',)
+
 class FavoriteForm(forms.ModelForm):
     class Meta:
         model = Favorite

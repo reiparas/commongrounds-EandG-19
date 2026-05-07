@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Avg
 from .models import ProjectCategory, Project, Favorite, ProjectReview, ProjectRating
-from .forms import FavoriteForm, ProjectReviewForm, ProjectRatingForm
+from .forms import ProjectForm, FavoriteForm, ProjectReviewForm, ProjectRatingForm
 from accounts.models import Profile
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def project_list(request):
@@ -46,16 +47,13 @@ def project_detail(request, id):
                     rate.project = project
                     rate.rater = currentProfile
                     rate.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'changeRate' in request.POST:
                 rateForm = ProjectRatingForm(request.POST, instance = ratings.get(rater=currentProfile))
                 if rateForm.is_valid():
                     rate = rateForm.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'removeRate' in request.POST:
                 rateToRemove = ratings.get(rater=currentProfile)
                 rateToRemove.delete()
-                return redirect('diyprojects:project_detail', id = project.pk)
             elif 'addFav' in request.POST:
                 favForm = FavoriteForm(request.POST)
                 if favForm.is_valid():
@@ -63,16 +61,13 @@ def project_detail(request, id):
                     fave.project = project
                     fave.profile = currentProfile
                     fave.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'changeStat' in request.POST:
                 favForm = FavoriteForm(request.POST, instance = favorites.get(profile=currentProfile))
                 if favForm.is_valid():
                     fave = favForm.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'removeFave' in request.POST:
                 faveToRemove = favorites.get(profile=currentProfile)
                 faveToRemove.delete()
-                return redirect('diyprojects:project_detail', id = project.pk)
             elif 'addRev' in request.POST:
                 revForm = ProjectReviewForm(request.POST, request.FILES)
                 if revForm.is_valid():
@@ -80,16 +75,14 @@ def project_detail(request, id):
                     rev.project = project
                     rev.reviewer = currentProfile
                     rev.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'changeRev' in request.POST:
                 revForm = ProjectReviewForm(request.POST, request.FILES, instance = reviews.get(reviewer=currentProfile))
                 if revForm.is_valid():
                     rev = revForm.save()
-                    return redirect('diyprojects:project_detail', id = project.pk)
             elif 'removeRev' in request.POST:
                 revToRemove = reviews.get(reviewer=currentProfile)
                 revToRemove.delete()
-                return redirect('diyprojects:project_detail', id = project.pk)
+            return redirect('diyprojects:project_detail', id = project.pk)
         ctx = {
             'project': project, 'avgRating': avgRating, 'ratings': ratings, 'ratProjects': ratProjects, 'rateForm': rateForm, 'favorites': favorites, 'favProjects':favProjects, 'favForm': favForm, 'reviews': reviews, 'revProjects': revProjects, 'revForm':revForm
         }
@@ -99,3 +92,34 @@ def project_detail(request, id):
         }
 
     return render(request, "diyprojects/project.html", ctx)
+
+@login_required
+def project_create(request):
+    currentUser = request.user
+    currentProfile = currentUser.profile
+    projForm = ProjectForm()
+    if request.method == 'POST':
+        projForm = ProjectForm(request.POST)
+        if projForm.is_valid():
+            proj = projForm.save(commit=False)
+            proj.creator = currentProfile
+            proj.save()
+            return redirect('diyprojects:project_detail', id = proj.pk)
+    ctx = {
+        'projForm': projForm
+    }
+    return render(request, "diyprojects/create.html", ctx)
+
+@login_required
+def project_update(request, id):
+    project = Project.objects.get(pk=id)
+    projForm = ProjectForm()
+    if request.method == 'POST':
+        projForm = ProjectForm(request.POST, instance = project)
+        if projForm.is_valid():
+            projForm.save()
+            return redirect('diyprojects:project_detail', id = project.pk)
+    ctx = {
+        'project': project, 'projForm': projForm
+    }
+    return render(request, "diyprojects/update.html", ctx)

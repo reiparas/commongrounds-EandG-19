@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Editing {{ project.title }} – DIY Projects{% endblock %}
+
+{% block content %}
+    <h1>Edit {{ project.title }}</h1>
+    <form method ="POST">
+        {% csrf_token %}
+        {{ projForm }}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
