@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Common Grounds</title>
+
+    <style>
+    
+        body { font-family: Arial, sans-serif; max-width: 800px; margin:40px auto; padding: 20px; }
+
+        h1 { color: #333; }
+
+        .title { font-size: 18px; color: #555; margin-bottom: 30px;
+        }
+
+        .link { display: grid; gap: 12px; }
+
+        .link a { display: block; padding: 15px; border: 1px solid #ddd; border-radius: 6px; text-decoration: none;
+            color: #006bcc; font-size: 20px; transition: 1s;
+        }
+
+        .link a:hover { background: #333; }
+        
+    </style>
+</head>
+
+<body>
+    <h1>Common Grounds</h1>
+
+    <p class="title">
+        Welcome to Common Grounds. This is Common Grounds. Welcome to Common Grounds.
+    </p>
+
+    <div class="link">
+        <a href="{% url 'bookclub:book_list' %}">Book Club</a>
+        <a href="{% url 'merchstore:product_list' %}">Merch Store</a>
+        <a href="{% url 'localevents:events_list' %}">Local Events</a>
+        <a href="{% url 'diyprojects:project_list' %}">DIY Projects</a>
+        <a href="{% url 'commissions:commission_list' %}">Commissions</a>
+    </div>
+</body>
+</html>

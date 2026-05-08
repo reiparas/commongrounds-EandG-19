@@ -1,9 +1,62 @@
-<h1>Book List</h1>
+{% extends "base.html" %}
 
+{% block title %}Book Club{% endblock %}
+
+{% block content %}
+<h1>Book Club</h1>
+<a href="{% url 'bookclub:book_create' %}" >Add a Book</a>
+
+{% if request.user.is_authenticated %}
+    {% if contributed %}
+    <h2>Books that you Have Contributed</h2>
+    <ul>
+        {% for book in contributed %}
+        <li class="card">
+            <a href="{% url 'bookclub:book_detail' book.pk %}">{{ book.title }}</a>
+            by {{ book.author }} ({{ book.publication_year}})
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if bookmarked %}
+    <h2>Your Bookmarked Books</h2>
+    <ul>
+        {% for book in bookmarked %}
+        <li class="card">
+            <a href="{% url 'bookclub:book_detail' book.pk %}">{{ book.title }}</a>
+            by {{ book.author }} ({{ book.publication_year}})
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if reviewed %}
+    <h2>Your Reviewed Books</h2>
+    <ul>
+        {% for book in reviewed %}
+        <li class="card">
+            <a href="{% url 'bookclub:book_detail' book.pk %}">{{ book.title }}</a>
+            by {{ book.author }} ({{ book.publication_year}})
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endif %}
+
+<h2>All Books</h2>
+{% if all_books %}
 <ul>
-    {% for book in books %}
-        <a href="/bookclub/book/{{book.pk}}">
-            <li>{{book.title}} by {{book.author}}</li>
-        </a>
+    {% for book in all_books %}
+    <li class="card">
+        <a href="{% url 'bookclub:book_detail' book.pk %}">{{ book.title }}</a>
+        by {{ book.author }} ({{ book.publication_year }})
+        — {{ book.genre}}
+        {% if not book.available_to_borrow %}<em>[Not available to borrow]</em>{% endif %}
+    </li>
     {% endfor %}
 </ul>
+{% else %}
+<p>No books yet.</p>
+{% endif %}
+{% endblock %}

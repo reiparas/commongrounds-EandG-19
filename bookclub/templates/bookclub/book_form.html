@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} Book{% endblock %}
+
+{% block content %}
+
+    <h1>{{ action }} Book</h1>
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{{ action }}</button>
+</form>
+<a class="back-link" href="{% url 'bookclub:book_list' %}">Cancel</a>
+
+{% endblock %}

@@ -1,12 +1,61 @@
-<title>{{book.title}}</title>
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
 <h1>{{book.title}}</h1>
 
-<p><strong>Genre:</strong> {{book.genre}}</p>
 <p><strong>Author:</strong> {{book.author}}</p>
+<p><strong>Available to borrow:</strong> {{ book.available_to_borrow }}</p>
+<p><strong>Genre:</strong> {{book.genre}}</p>
 <p><strong>Year published:</strong> {{book.publication_year}}</p>
+<p><strong>Synopsis:</strong> {{book.synopsis}}</p>
+<p><strong>Contributor:</strong> {{book.contributor|default:"Unknown"}}</p>
 <p><strong>Created on:</strong> {{book.created_on}}</p>
 <p><strong>Updated on:</strong> {{book.updated_on}}</p>
+
+<p><strong>Bookmarks:</strong> {{bookmark_count}}</p>
+{% if request.user.is_authenticated %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="toggle_bookmark">
+        {% if is_bookmarked %}Remove Bookmark{% else %}Bookmark{% endif %}
+    </button>
+</form>
+{% endif %} 
+
+{% if book.available_to_borrow %}
+    <a href="{% url 'bookclub:book_borrow' book.pk %}"><button>Borrow Book</button></a>
+{% else %}
+    <button disabled>Book Unavailable</button>
+{% endif %}
+
+<hr>
+
+<h2>Leave Review</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ review_form.as_p }}
+    <button type="submit" name="submit_review">Submit Review</button>
+</form>
+
+<h2>Reviews</h2>
+{% if reviews %}
+    {% for review in reviews %}
+    <div class="card">
+        <strong>{{ review.title }}</strong>
+        by {% if review.user_reviewer %}{{ review.user_reviewer.displayName }}
+        {% else %}
+        {{ review.anonymous_reviewer }}
+        {% endif %}
+        <p>{{ review.comment }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No reviews</p>
+{% endif %}
 
 <a href="{% url 'bookclub:book_list' %}">
     ← Back to Book List
 </a>
+{% endblock %}
