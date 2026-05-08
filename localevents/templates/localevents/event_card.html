@@ -1,0 +1,27 @@
+<div class="card">
+    <h3><a href="{% url 'localevents:event_detail' event.pk %}">{{ event.title }}</a></h3>
+    <div class="meta">
+        {% if event.category %}
+            <span>{{ event.category }}</span> &middot;
+        {% endif %}
+        <span>{{ event.location }}</span>
+    </div>
+    <div class="meta" style="margin-top:6px;">
+        <span>{{ event.start_time|date:"N j, Y, g:i a" }}</span>
+        &rarr;
+        <span>{{ event.end_time|date:"N j, Y, g:i a" }}</span>
+    </div>
+    {% if event.status %}
+    <div style="margin-top:8px;">
+        {% if event.status == 'available' %}
+            <span class="badge badge-available">Available</span>
+        {% elif event.status == 'full' %}
+            <span class="badge badge-full">Full</span>
+        {% elif event.status == 'done' %}
+            <span class="badge badge-done">Done</span>
+        {% elif event.status == 'cancelled' %}
+            <span class="badge badge-cancelled">Cancelled</span>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

@@ -3,13 +3,94 @@
 {% block title %}{{ event.title }} – Local Events{% endblock %}
 
 {% block content %}
-<h1>{{ event.title }}</h1>
-<p><strong>Category:</strong> {{ event.category|default:"N/A" }}</p>
-<p><strong>Location:</strong> {{ event.location }}</p>
-<p><strong>Start:</strong> {{ event.start_time }}</p>
-<p><strong>End:</strong> {{ event.end_time }}</p>
-<p><strong>Description:</strong> {{ event.description }}</p>
-<p><strong>Created On:</strong> {{ event.created_on }}</p>
-<p><strong>Updated On:</strong> {{ event.updated_on }}</p>
-<a href="/localevents/events" class="back-link">← Back to Events</a>
+<div class="detail-card">
+
+    {% if event.event_image %}
+    <img src="{{ event.event_image.url }}" alt="{{ event.title }}" class="event-image">
+    {% endif %}
+
+    <h1>{{ event.title }}</h1>
+
+    <div class="field-row">
+        <span class="field-label">Category</span>
+        <span class="field-value">{{ event.category|default:"N/A" }}</span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">Location</span>
+        <span class="field-value">{{ event.location }}</span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">Start</span>
+        <span class="field-value">{{ event.start_time|date:"N j, Y, g:i a" }}</span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">End</span>
+        <span class="field-value">{{ event.end_time|date:"N j, Y, g:i a" }}</span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">Status</span>
+        <span class="field-value">
+            {% if event.status == 'available' %}
+            <span class="badge badge-available">Available</span>
+            {% elif event.status == 'full' %}
+            <span class="badge badge-full">Full</span>
+            {% elif event.status == 'done' %}
+            <span class="badge badge-done">Done</span>
+            {% elif event.status == 'cancelled' %}
+            <span class="badge badge-cancelled">Cancelled</span>
+            {% endif %}
+        </span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">Capacity</span>
+        <span class="field-value">
+            <div class="capacity-bar-wrap">
+                <span class="capacity-bar-bg">
+                    <span class="capacity-bar-fill {% if event.is_full %}full{% endif %}"
+                        style="width: {% widthratio signup_count event.event_capacity 100 %}%">
+                    </span>
+                </span>
+                {{ signup_count }} / {{ event.event_capacity }}
+            </div>
+        </span>
+    </div>
+    <div class="field-row">
+        <span class="field-label">Organizer</span>
+        <span class="field-value">
+            {% for org in event.organizer.all %}
+            {{ org }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+            N/A
+            {% endfor %}
+        </span>
+    </div>
+
+    <div class="description-block">
+        {{ event.description }}
+    </div>
+
+    <div class="detail-actions">
+        {# FIX 1: use 'is_organizer' from context instead of 'profile' which is not passed #}
+        {% if is_organizer %}
+        <a href="{% url 'localevents:event_update' event.pk %}" class="btn btn-secondary">Edit Event</a>
+        {% else %}
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'localevents:event_signup' event.pk %}">
+                {% csrf_token %}
+                {# FIX 2: keep the {% if %} on one line — never split a tag across lines inside an attribute #}
+                <button type="submit" class="btn btn-success" {% if event.is_full %}disabled{% endif %}>
+                    Sign Up
+                </button>
+            </form>
+            {% else %}
+            {# FIX 2 also applied here #}
+            <a href="{% url 'localevents:event_signup_guest' event.pk %}" class="btn btn-success"
+                {% if event.is_full %}style="pointer-events:none; opacity:0.5;"{% endif %}>
+                Sign Up
+            </a>
+            {% endif %}
+        {% endif %}
+    </div>
+
+</div>
 {% endblock %}

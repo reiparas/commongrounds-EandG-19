@@ -3,16 +3,40 @@
 {% block title %}Local Events{% endblock %}
 
 {% block content %}
-<h1>Local Events</h1>
-{% for event in events %}
-<div class="card">
-    <h3><a href="/localevents/event/{{ event.pk }}">{{ event.title }}</a></h3>
-    <p><strong>Category:</strong> {{ event.category|default:"N/A" }}</p>
-    <p><strong>Location:</strong> {{ event.location }}</p>
-    <p><strong>Start:</strong> {{ event.start_time }}</p>
-    <p><strong>End:</strong> {{ event.end_time }}</p>
+<div class="page-header">
+    <h1>Local Events</h1>
+    <a href="{% url 'localevents:event_create' %}" class="btn btn-primary">+ Add Event</a>
 </div>
+
+{% if user.is_authenticated %}
+
+    {% if organized_events %}
+    <p class="section-label">Events You Organize</p>
+    {% for event in organized_events %}
+        {% include 'localevents/event_card.html' %}
+    {% endfor %}
+    {% endif %}
+
+    {% if signedup_events %}
+    <p class="section-label">Events You Signed Up For</p>
+    {% for event in signedup_events %}
+        {% include 'localevents/event_card.html' %}
+    {% endfor %}
+    {% endif %}
+
+    {% if all_events %}
+    <p class="section-label">All Events</p>
+    {% endif %}
+
+{% endif %}
+
+{% for event in all_events %}
+    {% include 'localevents/event_card.html' %}
 {% empty %}
-<p>No events available.</p>
+    {% if not organized_events and not signedup_events %}
+    <div class="empty-state">
+        <p>No events available yet.</p>
+    </div>
+    {% endif %}
 {% endfor %}
 {% endblock %}
